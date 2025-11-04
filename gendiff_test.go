@@ -1,7 +1,6 @@
 package code
 
 import (
-	"code/code"
 	"os"
 	"path/filepath"
 	"testing"
@@ -81,7 +80,7 @@ func TestGenerate_TableDriven(t *testing.T) {
 			path1 := filepath.Join(fixtures, tt.file1)
 			path2 := filepath.Join(fixtures, tt.file2)
 
-			out, err := code.GenDiff(path1, path2, tt.format)
+			out, err := GenDiff(path1, path2, tt.format)
 
 			if tt.expectErr {
 				require.Error(t, err)
