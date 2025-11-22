@@ -18,14 +18,9 @@ func Parse(path string) (map[string]interface{}, error) {
 	ext := filepath.Ext(path)
 	switch ext {
 	case ".json":
-		var any interface{}
-		if err := json.Unmarshal(body, &any); err != nil {
+		var m map[string]interface{}
+		if err := json.Unmarshal(body, &m); err != nil {
 			return nil, fmt.Errorf("json unmarshal: %w", err)
-		}
-
-		m, ok := any.(map[string]interface{})
-		if !ok {
-			return nil, fmt.Errorf("json top-level must be an object")
 		}
 		return m, err
 	case ".yml", ".yaml":
