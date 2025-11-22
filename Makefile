@@ -26,7 +26,6 @@ fmt:
 test:
 	@go mod tidy
 	@echo "Cleaning testdata..."
-	@rm -rf ./testdata
 	@echo "Running tests..."
 	go test -v ./...
 

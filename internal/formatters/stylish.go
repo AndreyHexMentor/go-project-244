@@ -38,14 +38,14 @@ func mapToString(m map[string]interface{}, depth int) string {
 	}
 	sort.Strings(keys)
 
-	var b strings.Builder
-	b.WriteString("{\n")
+	var sb strings.Builder
+	sb.WriteString("{\n")
 	for _, k := range keys {
 		space := indent(depth * indentSize)
-		b.WriteString(fmt.Sprintf("%s%s: %s\n", space, k, stringify(m[k], depth)))
+		sb.WriteString(fmt.Sprintf("%s%s: %s\n", space, k, stringify(m[k], depth)))
 	}
-	b.WriteString(fmt.Sprintf("%s}", indent((depth-1)*indentSize)))
-	return b.String()
+	sb.WriteString(fmt.Sprintf("%s}", indent((depth-1)*indentSize)))
+	return sb.String()
 }
 
 func formatStylish(tree []diff.Node) (string, error) {
@@ -53,26 +53,26 @@ func formatStylish(tree []diff.Node) (string, error) {
 }
 
 func render(nodes []diff.Node, depth int) string {
-	var b strings.Builder
+	var sb strings.Builder
 	indentForMark := indent(depth*indentSize - 2)
 	indentPlain := indent(depth * indentSize)
 
 	for _, n := range nodes {
 		switch n.Type {
 		case diff.Nested:
-			b.WriteString(fmt.Sprintf("%s  %s: {\n", indentPlain[:len(indentPlain)-2], n.Key))
-			b.WriteString(render(n.Children, depth+1))
-			b.WriteString(fmt.Sprintf("%s  }\n", indentPlain[:len(indentPlain)-2]))
+			sb.WriteString(fmt.Sprintf("%s  %s: {\n", indentPlain[:len(indentPlain)-2], n.Key))
+			sb.WriteString(render(n.Children, depth+1))
+			sb.WriteString(fmt.Sprintf("%s  }\n", indentPlain[:len(indentPlain)-2]))
 		case diff.Unchanged:
-			b.WriteString(fmt.Sprintf("%s  %s: %s\n", indentPlain[:len(indentPlain)-2], n.Key, stringify(n.Value, depth)))
+			sb.WriteString(fmt.Sprintf("%s  %s: %s\n", indentPlain[:len(indentPlain)-2], n.Key, stringify(n.Value, depth)))
 		case diff.Added:
-			b.WriteString(fmt.Sprintf("%s+ %s: %s\n", indentForMark, n.Key, stringify(n.Value, depth)))
+			sb.WriteString(fmt.Sprintf("%s+ %s: %s\n", indentForMark, n.Key, stringify(n.Value, depth)))
 		case diff.Removed:
-			b.WriteString(fmt.Sprintf("%s- %s: %s\n", indentForMark, n.Key, stringify(n.Value, depth)))
+			sb.WriteString(fmt.Sprintf("%s- %s: %s\n", indentForMark, n.Key, stringify(n.Value, depth)))
 		case diff.Changed:
-			b.WriteString(fmt.Sprintf("%s- %s: %s\n", indentForMark, n.Key, stringify(n.OldValue, depth)))
-			b.WriteString(fmt.Sprintf("%s+ %s: %s\n", indentForMark, n.Key, stringify(n.Value, depth)))
+			sb.WriteString(fmt.Sprintf("%s- %s: %s\n", indentForMark, n.Key, stringify(n.OldValue, depth)))
+			sb.WriteString(fmt.Sprintf("%s+ %s: %s\n", indentForMark, n.Key, stringify(n.Value, depth)))
 		}
 	}
-	return b.String()
+	return sb.String()
 }
